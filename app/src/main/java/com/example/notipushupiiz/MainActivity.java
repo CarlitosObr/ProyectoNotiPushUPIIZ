@@ -10,6 +10,7 @@ public class MainActivity extends AppCompatActivity {
     Button b;
     EditText et;
     int variablefer;
+    int variabledelchilero;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
