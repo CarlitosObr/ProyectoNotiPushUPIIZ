@@ -9,6 +9,8 @@ import android.widget.EditText;
 public class MainActivity extends AppCompatActivity {
     Button b;
     EditText et;
+
+    // me la pelan 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
