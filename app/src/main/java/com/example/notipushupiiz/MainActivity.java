@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
     Button b;
+    EditText sobres;
     EditText et;
     int variablefer;
     int variabledelchilero;
