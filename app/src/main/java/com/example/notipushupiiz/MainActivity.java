@@ -3,9 +3,13 @@ package com.example.notipushupiiz;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
- double variabledelfer;
+    Button b;
+    EditText et;
+    int variablefer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
