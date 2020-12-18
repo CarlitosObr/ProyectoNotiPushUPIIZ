@@ -17,7 +17,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> listCategorias;
     private Map<String, ArrayList<String >> mapChild;
     Button b;
+    Button c;
+    Button d;
     EditText sobres;
+    EditText prueba;
     EditText et;
     int variablefer;
     int variabledelchilero;

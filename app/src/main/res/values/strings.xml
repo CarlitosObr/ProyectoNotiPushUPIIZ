@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NotiPushUPIIZ</string>
+    <string name="noti">Notificación</string>
+    <string name="Becas_2010">Becas 2010</string>
+    <string name="button1">Regresar</string>
+    <string name="notificacion">Notificacion</string>
+    <string name="becas_2010">Becas 2010</string>
+    <string name="regresar">Regresar</string>
 </resources>
