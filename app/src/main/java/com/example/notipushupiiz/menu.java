@@ -1,13 +1,17 @@
 package com.example.notipushupiiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -19,10 +23,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class menu extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
-    DrawerLayout drawer;
+    private static final String URL = "https://img2.freepng.es/20180604/gpx/kisspng-will-smith-clip-art-jr-smith-5b14c6d957ab97.4000236515280882813591.jpg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,18 +42,21 @@ public class menu extends AppCompatActivity implements NavigationView.OnNavigati
                         .setAction("Action", null).show();
             }
         });
-        drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.notificaciones, R.id.salir)
+                R.id.nav_home,R.id.notipush, R.id.salir2)
                 .setDrawerLayout(drawer)
                 .build();
+        //navigationView.setNavigationItemSelectedListener(this);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        actualizaNavHeader();
     }
 
     @Override
@@ -64,22 +72,21 @@ public class menu extends AppCompatActivity implements NavigationView.OnNavigati
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+    public void actualizaNavHeader(){
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView nom_bar = headerView.findViewById(R.id.nombre_barra);
+        TextView usu_bar = headerView.findViewById(R.id.usuario_barra);
+        ImageView im_barra = headerView.findViewById(R.id.image_barra);
 
-            case R.id.notificaciones:
-                //do somthing
-                break;
-
-            case R.id.salir:
-                //do somthing
-                break;
-
-        }
-        //close navigation drawer
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        nom_bar.setText("Juan Doe");
+        usu_bar.setText("juan@ipn.com");
+        Picasso.get()
+                .load(URL)
+                .resize(64,64)
+                .centerCrop()
+                .into(im_barra);
     }
+
 }
