@@ -14,24 +14,36 @@
         android:layout_gravity="center"
         app:srcCompat="@drawable/logo" />
 
-    <ExpandableListView
-        android:id="@+id/expLV"
+    <Spinner
+        android:id="@+id/spinnerTipo"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="left"
-        android:text="seleccionar"
-        android:textSize="25dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp" />
 
     <EditText
+        android:id="@+id/numero"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:hint="Digite el número de boleta o empleado" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:text="Continuar" />
+
+
 
 
 </LinearLayout>
