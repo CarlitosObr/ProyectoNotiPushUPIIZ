@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaSync;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -38,13 +40,15 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, ArrayList<String >> mapChild;
     private static final String URL_TRABAJADOR = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/empleado.php?numempleado=";
     private static final String URL_ALUMNO = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta=";
-    private static final String URL_PRO = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta=";
+    private static final String URL_PRO = "http://192.168.1.72/NOTIPUSH_API/v1/usuarios.php";
     Spinner tipo;
     String tipo_usuar;
     EditText usuario;
     Button continuar;
     RequestQueue rq;
+    RequestQueue rq2;
     String numBolEm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,19 +98,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loginTrabajador(String numBolEm) {
-        StringRequest sr = new StringRequest(Request.Method.GET, URL_TRABAJADOR+numBolEm,
+    private void loginTrabajador(String numEm) {
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_TRABAJADOR+numEm,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject JSO = new JSONObject(response);
                             String estado = JSO.getString("estado");
-
+                            String programa = JSO.getString("programa");
                             //JSONArray ja = JSO.getJSONArray("login");
                             if(estado.equals("1")){
                                 String nombre = JSO.getString("nombre");
                                 Toast.makeText(MainActivity.this,"El empleado es: "+nombre,Toast.LENGTH_LONG).show();
+                                obtenerelprograma(programa,nombre,numBolEm,tipo_usuar);
                                /* JSONObject jsob1 = ja.getJSONObject(0);
                                 String nombre = jsob1.getString("Nombre");
                                 String usuario = jsob1.getString("Usuario");
@@ -145,11 +150,12 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject JSO = new JSONObject(response);
                             String estado = JSO.getString("estado");
                             String nombre = JSO.getString("nombre");
+
                             //JSONArray ja = JSO.getJSONArray("login");
                             if(estado.equals("1")){
                                 String programa = JSO.getString("programa");
-                                Toast.makeText(MainActivity.this,"El alumno es: "+nombre,Toast.LENGTH_LONG).show();
-                                obtenerelprograma(programa);
+                                //Toast.makeText(MainActivity.this,"El alumno es: "+nombre,Toast.LENGTH_LONG).show();
+                                obtenerelprograma(programa,nombre,numBolEm,tipo_usuar);
                                /* JSONObject jsob1 = ja.getJSONObject(0);
                                 String nombre = jsob1.getString("Nombre");
                                 String usuario = jsob1.getString("Usuario");
@@ -179,8 +185,11 @@ public class MainActivity extends AppCompatActivity {
         rq.add(sr);
     }
 
-    private void obtenerelprograma(String programa) {
-        StringRequest sr = new StringRequest(Request.Method.GET, URL_PRO+""+programa+"",
+    private void obtenerelprograma(final String programa, final String nombre, final String numbol, final String tipo) {
+       // rq2 = Volley.newRequestQueue(this);
+        //Toast.makeText(MainActivity.this,URL_PRO,Toast.LENGTH_LONG).show();
+
+        StringRequest sr2 = new StringRequest(Request.Method.GET, URL_PRO,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -189,12 +198,20 @@ public class MainActivity extends AppCompatActivity {
                             String estatus = JSO.getString("estatus");
                             //String nombre = JSO.getString("nombre");
                             JSONArray ja = JSO.getJSONArray("programas");
+                           // Toast.makeText(MainActivity.this,"AQUÍ ANDO",Toast.LENGTH_LONG).show();
                             if(estatus.equals("1")){
                                // String programa = JSO.getString("programa");
-                                //Toast.makeText(MainActivity.this,"El alumno es: "+nombre,Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MainActivity.this,"PROGRAMA: "+programa,Toast.LENGTH_LONG).show();
                                 //obtenerelprograma(programa);
-                                JSONObject jsob1 = ja.getJSONObject(0);
-                                String idPrograma = jsob1.getString("idPrograma");
+                                String idPrograma = "";
+                                for(int i = 0; i<ja.length(); i++){
+                                    JSONObject jsob1 = ja.getJSONObject(i);
+                                    if(jsob1.getString("Nombre").equals(programa)){
+                                        idPrograma = jsob1.getString("idPrograma");
+                                    }
+                                }
+                                //Toast.makeText(MainActivity.this,"IDPROGRAMA: "+idPrograma,Toast.LENGTH_LONG).show();
+                                registrarUsuario(nombre,numbol,tipo,idPrograma);
 
                             }else if(estatus.equals("0")){
                                 Toast.makeText(MainActivity.this,"No se encontró el programa",Toast.LENGTH_LONG).show();
@@ -210,6 +227,52 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,error.getMessage(),Toast.LENGTH_LONG).show();
                     }
                 });
-        rq.add(sr);
+        rq.add(sr2);
+
+    }
+
+    public void registrarUsuario(String nombre,String numbol,String tipo,String idPrograma){
+            //String url = "http://192.168.1.72/NOTIPUSH_API/v1/usuarios.php";
+            HashMap<String, String> parametros = new HashMap();
+            parametros.put("idUsuario","");
+            parametros.put("nombreCompleto",nombre);
+            parametros.put("boleta",numbol);
+            parametros.put("token","");
+            parametros.put("tipo",tipo);
+            parametros.put("Programa_idPrograma",idPrograma);
+        Toast.makeText(MainActivity.this,"HOLAAA",Toast.LENGTH_LONG).show();
+            JsonObjectRequest rqn = new JsonObjectRequest(Request.Method.POST, URL_PRO, new JSONObject(parametros),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+                                String respuesta = response.getString("estatus");
+                                if(respuesta.equals("1")) {
+                                    //JSONArray ja = response.getJSONArray("empleados");
+                                    Intent intencion = new Intent(getApplicationContext(), menu.class);
+                                   /* Bundle mib = new Bundle();
+                                    mib.putString("ID",ID);
+                                    mib.putString("Nombre",nombre);
+                                    mib.putString("Usuario",usuario);
+                                    intencion.putExtras(mib);*/
+                                    startActivity(intencion);
+
+                                }else if(respuesta.equals("0")){
+                                    Toast.makeText(MainActivity.this,"Ocurrió un error",Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(MainActivity.this,error.getMessage(),Toast.LENGTH_LONG).show();
+                        }
+                    }
+            );
+        rq.add(rqn);
     }
 }
