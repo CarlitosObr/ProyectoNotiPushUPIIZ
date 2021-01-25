@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaSync;
@@ -67,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
         cargarDatos();
         ArrayAdapter<CharSequence> adaptador = new ArrayAdapter(this,android.R.layout.simple_spinner_item,listCategorias);
         tipo.setAdapter(adaptador);
+        checkLogin();
         tipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     tipo_usuar = listCategorias.get(position);
@@ -87,6 +90,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkLogin() {
+        SharedPreferences shp = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+        String logueado = shp.getString("logueado","no");
+
+        if(logueado.equals("si")){
+            Intent intencion = new Intent(getApplicationContext(), menu.class);
+            //intencion.putExtras(mib);
+            startActivity(intencion);
+            finish();
+        }
+    }
+
     private void cargarDatos(){
         listCategorias = new ArrayList<>();
         listCategorias.add("Seleccione");
@@ -118,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                             //JSONArray ja = JSO.getJSONArray("login");
                             if(estado.equals("1")){
                                 String nombre = JSO.getString("nombre");
-                                Toast.makeText(MainActivity.this,"El empleado es: "+nombre,Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MainActivity.this,"El empleado es: "+nombre,Toast.LENGTH_LONG).show();
                                 obtenerelprograma(programa,nombre,numBolEm,tipo_usuar);
                                /* JSONObject jsob1 = ja.getJSONObject(0);
                                 String nombre = jsob1.getString("Nombre");
@@ -248,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
             parametros.put("token","");
             parametros.put("tipo",tipo);
             parametros.put("Programa_idPrograma",idPrograma);
-        Toast.makeText(MainActivity.this,"HOLAAA",Toast.LENGTH_LONG).show();
+       // Toast.makeText(MainActivity.this,"HOLAAA",Toast.LENGTH_LONG).show();
             JsonObjectRequest rqn = new JsonObjectRequest(Request.Method.POST, URL_PRO, new JSONObject(parametros),
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -261,6 +277,13 @@ public class MainActivity extends AppCompatActivity {
                                     Intent intencion = new Intent(getApplicationContext(), menu.class);
                                     Bundle mib = new Bundle();
                                     //mib.putString("ID",ID);
+                                    SharedPreferences preferences = getSharedPreferences("credenciales",Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.putString("logueado","si");
+                                    editor.putString("boleta",numbol);
+                                    editor.putString("nombre",nombre);
+                                    editor.putString("tipo",tipo);
+                                    editor.commit();
                                     mib.putString("Nombre",tipo);
                                     mib.putString("Usuario",nombre);
                                     mib.putString("Boleta",numbol);

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logueado">no</string>
+    <string name="boleta">no hay</string>
+    <string name="nombre">no hay</string>
+    <string name="tipo">no hay</string>
+</resources>
