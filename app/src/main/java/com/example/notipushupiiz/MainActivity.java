@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, ArrayList<String >> mapChild;
     private static final String URL_TRABAJADOR = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/empleado.php?numempleado=";
     private static final String URL_ALUMNO = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta=";
-    private static final String URL_PRO = "http://192.168.1.72/NOTIPUSH_API/v1/usuarios.php";
+    private static final String URL_PRO = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/usuarios.php";
+    private static final String URL_i = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/nopu.png";
     Spinner tipo;
     String tipo_usuar;
     EditText usuario;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue rq;
     RequestQueue rq2;
     String numBolEm;
-
+    ImageView nueva;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         tipo = findViewById(R.id.spinnerTipo);
         usuario = findViewById(R.id.numero);
         continuar = findViewById(R.id.buttonC);
+        nueva = findViewById(R.id.imageViewN);
+        Picasso.get()
+                .load(URL_i)
+                .resize(400,480)
+                .into(nueva);
         cargarDatos();
         ArrayAdapter<CharSequence> adaptador = new ArrayAdapter(this,android.R.layout.simple_spinner_item,listCategorias);
         tipo.setAdapter(adaptador);
@@ -81,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void cargarDatos(){
         listCategorias = new ArrayList<>();
-        listCategorias.add("Seleccione Auto");
+        listCategorias.add("Seleccione");
         listCategorias.add("Alumno");
         listCategorias.add("Docente");
         listCategorias.add("PAAE");
@@ -231,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void registrarUsuario(String nombre,String numbol,String tipo,String idPrograma){
+    public void registrarUsuario(final String nombre, final String numbol, final String tipo, String idPrograma){
             //String url = "http://192.168.1.72/NOTIPUSH_API/v1/usuarios.php";
             HashMap<String, String> parametros = new HashMap();
             parametros.put("idUsuario","");
@@ -251,11 +259,12 @@ public class MainActivity extends AppCompatActivity {
                                 if(respuesta.equals("1")) {
                                     //JSONArray ja = response.getJSONArray("empleados");
                                     Intent intencion = new Intent(getApplicationContext(), menu.class);
-                                   /* Bundle mib = new Bundle();
-                                    mib.putString("ID",ID);
-                                    mib.putString("Nombre",nombre);
-                                    mib.putString("Usuario",usuario);
-                                    intencion.putExtras(mib);*/
+                                    Bundle mib = new Bundle();
+                                    //mib.putString("ID",ID);
+                                    mib.putString("Nombre",tipo);
+                                    mib.putString("Usuario",nombre);
+                                    mib.putString("Boleta",numbol);
+                                    intencion.putExtras(mib);
                                     startActivity(intencion);
 
                                 }else if(respuesta.equals("0")){

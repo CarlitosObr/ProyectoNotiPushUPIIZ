@@ -26,8 +26,8 @@ import androidx.appcompat.widget.Toolbar;
 public class menu extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
-    private static final String URL = "https://img2.freepng.es/20180604/gpx/kisspng-will-smith-clip-art-jr-smith-5b14c6d957ab97.4000236515280882813591.jpg";
-
+    private static final String URL = "https://image.flaticon.com/icons/png/512/16/16363.png";
+    Bundle b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +44,7 @@ public class menu extends AppCompatActivity{
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-
+        b = getIntent().getExtras();
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -80,8 +80,8 @@ public class menu extends AppCompatActivity{
         TextView usu_bar = headerView.findViewById(R.id.usuario_barra);
         ImageView im_barra = headerView.findViewById(R.id.image_barra);
 
-        nom_bar.setText("Juan Doe");
-        usu_bar.setText("juan@ipn.com");
+        nom_bar.setText(b.getString("Nombre"));
+        usu_bar.setText(b.getString("Usuario"));
         Picasso.get()
                 .load(URL)
                 .resize(64,64)
