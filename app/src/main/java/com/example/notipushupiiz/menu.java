@@ -1,6 +1,8 @@
 package com.example.notipushupiiz;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,14 +36,7 @@ public class menu extends AppCompatActivity{
         setContentView(R.layout.activity_menu);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         b = getIntent().getExtras();
@@ -79,9 +74,13 @@ public class menu extends AppCompatActivity{
         TextView nom_bar = headerView.findViewById(R.id.nombre_barra);
         TextView usu_bar = headerView.findViewById(R.id.usuario_barra);
         ImageView im_barra = headerView.findViewById(R.id.image_barra);
-
-        nom_bar.setText(b.getString("Nombre"));
-        usu_bar.setText(b.getString("Usuario"));
+        SharedPreferences shp = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+        String nombre = shp.getString("tipo","no hay");
+        String usuario = shp.getString("nombre","no hay");
+        //nom_bar.setText(b.getString("Nombre"));
+       // usu_bar.setText(b.getString("Usuario"));
+         nom_bar.setText(nombre);
+         usu_bar.setText(usuario);
         Picasso.get()
                 .load(URL)
                 .resize(64,64)
