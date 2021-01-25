@@ -1,5 +1,6 @@
 package com.example.notipushupiiz;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaSync;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +28,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -36,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
+
 public class MainActivity extends AppCompatActivity {
     private ExpandableListView expLV;
     private ExpLVAdapter adapter;
@@ -43,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, ArrayList<String >> mapChild;
     private static final String URL_TRABAJADOR = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/empleado.php?numempleado=";
     private static final String URL_ALUMNO = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta=";
-    private static final String URL_PRO = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/usuarios.php";
-    private static final String URL_i = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/nopu.png";
+    private static final String URL_PRO = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/usuarios.php";
+    private static final String URL_i = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/nopu.png";
     Spinner tipo;
     String tipo_usuar;
     EditText usuario;
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue rq2;
     String numBolEm;
     ImageView nueva;
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +95,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saber();
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(new OnCompleteListener<String>() {
+                            @Override
+                            public void onComplete(@NonNull Task<String> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                    return;
+                                }
+
+                                // Get new FCM registration token
+                                 token = task.getResult();
+
+                                // Log and toast
+                                String msg = token;
+                                Log.d(TAG, msg);
+                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
             }
         });
     }
@@ -261,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             parametros.put("idUsuario","");
             parametros.put("nombreCompleto",nombre);
             parametros.put("boleta",numbol);
-            parametros.put("token","");
+            parametros.put("token",token);
             parametros.put("tipo",tipo);
             parametros.put("Programa_idPrograma",idPrograma);
        // Toast.makeText(MainActivity.this,"HOLAAA",Toast.LENGTH_LONG).show();

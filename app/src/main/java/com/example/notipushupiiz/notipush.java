@@ -43,8 +43,8 @@ public class notipush extends Fragment implements AdapterView.OnItemClickListene
     private String mParam1;
     private String mParam2;
 
-    private static final String URL_saberID = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/usuarios.php?boleta=";
-    private static final String URL_mostrar = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/notificaciones.php?idUsuario=";
+    private static final String URL_saberID = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/usuarios.php?boleta=";
+    private static final String URL_mostrar = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1//notificaciones.php?idUsuario=";
     View v;
     RequestQueue rq;
     ListView lista;
