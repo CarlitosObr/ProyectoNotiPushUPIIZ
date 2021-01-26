@@ -97,6 +97,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saber();
+                FirebaseMessaging.getInstance().subscribeToTopic("topic_general")
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                String msg ="suscrito";
+                                if (!task.isSuccessful()) {
+                                    msg = "suscrito";
+                                }
+                                Log.d(TAG, msg);
+                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                 FirebaseMessaging.getInstance().getToken()
                         .addOnCompleteListener(new OnCompleteListener<String>() {
                             @Override
