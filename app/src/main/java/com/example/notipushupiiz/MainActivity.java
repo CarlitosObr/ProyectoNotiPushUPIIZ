@@ -50,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, ArrayList<String >> mapChild;
     private static final String URL_TRABAJADOR = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/empleado.php?numempleado=";
     private static final String URL_ALUMNO = "http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta=";
-    private static final String URL_PRO = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/usuarios.php";
-    private static final String URL_i = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/nopu.png";
+    //private static final String URL_PRO = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/usuarios.php";
+   // private static final String URL_i = "http://10.0.0.6/RepoAppsMoviles/Proyecto/NOTIPUSH_API/v1/nopu.png";
+    private static final String URL_PRO = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/usuarios.php";
+    private static final String URL_i = "http://192.168.1.72/WORK/Repositorios/ProyectoAppsBEIFI/NOTIPUSH_API/v1/nopu.png";
     Spinner tipo;
     String tipo_usuar;
     EditText usuario;
@@ -316,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                                     mib.putString("Boleta",numbol);
                                     intencion.putExtras(mib);
                                     startActivity(intencion);
-
+                                    finish();
                                 }else if(respuesta.equals("0")){
                                     Toast.makeText(MainActivity.this,"Ocurrió un error",Toast.LENGTH_LONG).show();
                                 }
